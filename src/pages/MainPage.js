@@ -4,6 +4,9 @@ import { useEffect, useState, useRef } from "react";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 export default function MainPage({ setToken, setGameId }) {
   const [profile, setProfile] = useState(null);
@@ -61,51 +64,67 @@ export default function MainPage({ setToken, setGameId }) {
     setToken(null);
   }
   return (
-    <div>
-      <h1>Main Page</h1>
-      <p>Profil: {profile && <span>{profile.user.email}</span>}</p>
-      <Button
-        className={"btn-success"}
-        type="button"
-        onClick={(e) => handleCreateGame(e)}
-      >
-        Create Game
-      </Button>
-      <Button
-        className={"btn-danger"}
-        type="button"
-        onClick={(e) => handleLogout(e)}
-      >
-        Logout
-      </Button>
-      <Table striped="columns" bordered hover>
-        <thead>
-          <tr>
-            <th>Id</th>
-            <th>Player 1</th>
-            <th>Player 2</th>
-            <th>Status</th>
-            <th>Join</th>
-          </tr>
-        </thead>
-        <tbody>
-          {games.map((game, index) => {
-            return (
-              <tr key={index}>
-                <td>{game.id}</td>
-                <td>{game.player1 ? game.player1.email : " "}</td>
-                <td>{game.player2 ? game.player2.email : " "}</td>
-                <td>{game.status}</td>
-                <td>
-                  <Button onClick={(e) => handleJoinGame(e, game.id)}>
-                    Join
-                  </Button>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </Table>
-    </div>
+    <Container>
+      <Row>
+        <Col>
+          <Row>
+            <Col>
+              <h1>Main Page</h1>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <h2>Profil: {profile && <span>{profile.user.email}</span>}</h2>
+              <Button
+                className={"btn-success"}
+                type="button"
+                onClick={(e) => handleCreateGame(e)}
+              >
+                Create Game
+              </Button>
+              <Button
+                className={"btn-danger"}
+                type="button"
+                onClick={(e) => handleLogout(e)}
+              >
+                Logout
+              </Button>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Table striped="columns" bordered hover>
+                <thead>
+                  <tr>
+                    <th>Id</th>
+                    <th>Player 1</th>
+                    <th>Player 2</th>
+                    <th>Status</th>
+                    <th>Join</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {games.map((game, index) => {
+                    return (
+                      <tr key={index}>
+                        <td>{game.id}</td>
+                        <td>{game.player1 ? game.player1.email : " "}</td>
+                        <td>{game.player2 ? game.player2.email : " "}</td>
+                        <td>{game.status}</td>
+                        <td>
+                          <Button onClick={(e) => handleJoinGame(e, game.id)}>
+                            Join
+                          </Button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </Table>
+            </Col>
+          </Row>
+        </Col>
+      </Row>
+    </Container>
   );
 }

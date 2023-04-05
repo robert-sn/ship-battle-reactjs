@@ -9,8 +9,11 @@ export default function GameBoard({ game, user }) {
   const [matrix2, setMatrix2] = useState([]);
   const iAmPlayerOne = game.player1Id === user.id;
 
+  // console.log(game);
+  // console.log(user);
   useEffect(() => {
-    setMatrix(createCells(game.shipsCoord, true));
+    let shipsCoord = game.shipsCoord ? game.shipsCoord : [];
+    setMatrix(createCells(shipsCoord, true));
     let moves = game.moves.filter((m) => m.playerId === user.id);
     setMatrix2(createCells(moves, false));
   }, [game, user]);

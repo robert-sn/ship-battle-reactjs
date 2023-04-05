@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { profileUser } from "../api/ProfileClient";
-import { getGameById } from "../api/GamesClient";
+import { getGameById, gameConfigDefault } from "../api/GamesClient";
 import GameBoard from "../component/GameBoard";
 import { useNavigate } from "react-router-dom";
 import Container from "react-bootstrap/Container";
@@ -52,6 +52,7 @@ export default function GamePage({ setGameId }) {
   }
   function handleSendConfigMap(e) {
     e.preventDefault();
+    gameConfigDefault(game.id);
   }
 
   return (
@@ -72,8 +73,8 @@ export default function GamePage({ setGameId }) {
             <Row className={"border m-1"}>
               <Col>
                 <span className={"mx-2"}>Player1:</span>
-                <span className={"mx-2"}>{game.player1.id}</span>
-                <span className={"mx-2"}>{game.player1.email}</span>
+                <span className={"mx-2"}>{game.player1?.id}</span>
+                <span className={"mx-2"}>{game.player1?.email}</span>
               </Col>
               <Col className={"text-right"}>
                 <Button onClick={(e) => handleSendConfigMap(e)}>
@@ -89,7 +90,9 @@ export default function GamePage({ setGameId }) {
                 <span className={"mx-2"}>{game.player2?.email}</span>
               </Col>
               <Col className={"text-right"}>
-                <Button>Send Config Map</Button>
+                <Button onClick={(e) => handleSendConfigMap(e)}>
+                  Send Config Map
+                </Button>
               </Col>
             </Row>
             <Row>
@@ -102,7 +105,7 @@ export default function GamePage({ setGameId }) {
               <Col>
                 <span className={"mx-2"}>Next to move:</span>
                 <span>
-                  {game.playerToMoveId === game.player1Id
+                  {game?.playerToMoveId === game?.player1Id
                     ? game.player1.email
                     : game.player2.email}
                 </span>
