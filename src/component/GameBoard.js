@@ -1,4 +1,3 @@
-import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { useState, useEffect } from "react";
@@ -9,26 +8,14 @@ export default function GameBoard({ game, user }) {
   const [matrix, setMatrix] = useState([]);
   const [matrix2, setMatrix2] = useState([]);
   const iAmPlayerOne = game.player1Id === user.id;
-  console.log(game);
 
   useEffect(() => {
-    let myShips = [];
-    if (iAmPlayerOne) {
-      if (game && game.shipsCoord?.length > 0) {
-        myShips = game.shipsCoord.filter((f) => f.playerId === game.player1Id);
-      }
-    } else {
-      if (game && game.shipsCoord?.length > 0) {
-        myShips = game.shipsCoord.filter((f) => f.playerId === game.player2Id);
-      }
-    }
-    setMatrix(createCells(myShips));
-    setMatrix2(createCells(game.moves));
-    console.log(myShips);
-    console.log(game.moves);
+    setMatrix(createCells(game.shipsCoord, true));
+    let moves = game.moves.filter((m) => m.playerId === user.id);
+    setMatrix2(createCells(moves, false));
   }, [game, user]);
 
-  function createCells(ships) {
+  function createCells(ships, areMyShips) {
     let aux = [];
     for (let i = 0; i < 10; i++) {
       let row = [];
@@ -36,9 +23,9 @@ export default function GameBoard({ game, user }) {
         let cell = ships.find((s) => s.x === leters[i] && s.y === j + 1);
         if (cell) {
           row.push({
-            x: leters[j],
-            y: i + 1,
-            ship: iAmPlayerOne
+            x: leters[i],
+            y: j + 1,
+            ship: areMyShips
               ? !cell.hit
                 ? "bg-success"
                 : "bg-danger"
@@ -48,8 +35,8 @@ export default function GameBoard({ game, user }) {
           });
         } else {
           row.push({
-            x: leters[j],
-            y: i + 1,
+            x: leters[i],
+            y: j + 1,
             ship: " ",
           });
         }
@@ -72,10 +59,6 @@ export default function GameBoard({ game, user }) {
     strike(JSON.stringify(req), game.id);
   }
 
-  // console.log(matrix);
-  // console.log(matrix2);
-  // console.log(myShips);
-  // console.log(otherShips);
   return (
     <Row>
       <Col>
@@ -111,9 +94,11 @@ export default function GameBoard({ game, user }) {
             <Row>
               <Col className={"my-2"}>
                 <h3>
-                  {!iAmPlayerOne && game.player2 != null
-                    ? game.player1.email
-                    : "No player"}
+                  {iAmPlayerOne
+                    ? game.player2 !== null
+                      ? game.player2.email
+                      : "No player"
+                    : game.player1.email}
                 </h3>
               </Col>
             </Row>

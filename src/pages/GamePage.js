@@ -13,6 +13,7 @@ export default function GamePage({ setGameId }) {
   const [profile, setProfile] = useState(null);
   const [state, setState] = useState("");
   const navigate = useNavigate();
+  const interval = useState(null);
 
   useEffect(() => {
     setState("loading");
@@ -35,6 +36,12 @@ export default function GamePage({ setGameId }) {
       }
     };
     loadData();
+
+    interval.current = setInterval(loadData, 2000);
+
+    return () => {
+      clearInterval(interval.current);
+    };
   }, [setGameId]);
 
   function handleExit(e) {
@@ -42,6 +49,9 @@ export default function GamePage({ setGameId }) {
     sessionStorage.removeItem("gameId");
     setGameId(null);
     navigate("/");
+  }
+  function handleSendConfigMap(e) {
+    e.preventDefault();
   }
 
   return (
@@ -66,7 +76,9 @@ export default function GamePage({ setGameId }) {
                 <span className={"mx-2"}>{game.player1.email}</span>
               </Col>
               <Col className={"text-right"}>
-                <Button>Send Config Map</Button>
+                <Button onClick={(e) => handleSendConfigMap(e)}>
+                  Send Config Map
+                </Button>
               </Col>
             </Row>
 
