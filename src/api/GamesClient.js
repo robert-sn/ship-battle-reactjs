@@ -52,12 +52,10 @@ export async function joinGame(gameId) {
   );
 
   if (response.code !== 200) {
-    console.log(JSON.stringify(shipsV2));
-    gameConfig(gameId, JSON.stringify(shipsV2));
+    // gameConfig(gameId, JSON.stringify(shipsV2));
     response = await getGameById(gameId);
   } else {
-    console.log(JSON.stringify(shipsV2));
-    gameConfig(gameId, JSON.stringify(shipsV2));
+    // gameConfig(gameId, JSON.stringify(shipsV2));
   }
   return await response;
 }
@@ -81,6 +79,25 @@ export async function gameConfig(gameId, mapConfig) {
   return await response;
 }
 
+export async function gameConfigDefault(gameId) {
+  let authToken = "Bearer " + sessionStorage.getItem("token");
+
+  let request = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: authToken,
+    },
+    method: "PATCH",
+    body: JSON.stringify(shipsV2),
+  };
+
+  let response = await fetch(baseApi + "/" + gameId, request).then((resp) =>
+    resp.json()
+  );
+  console.log(response);
+  return await response;
+}
+
 export async function createGame() {
   let authToken = "Bearer " + sessionStorage.getItem("token");
 
@@ -92,11 +109,14 @@ export async function createGame() {
     method: "POST",
   };
 
-  let response = await fetch(baseApi, request).then((resp) => resp.json());
+  let response = await fetch(baseApi, request).then((resp) => {
+    if (response.code === 200) {
+      sessionStorage.setItem("gameId", response.json().id);
+    }
+    resp.json();
+  });
   console.log(response);
-  if (response.code === 200) {
-    sessionStorage.setItem("gameId", response.id);
-  }
+
   return await response;
 }
 
