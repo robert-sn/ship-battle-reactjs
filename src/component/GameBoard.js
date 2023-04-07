@@ -2,6 +2,10 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { useState, useEffect } from "react";
 import { strike } from "../api/GamesClient";
+import Button from "react-bootstrap/Button";
+import { gameConfigDefault } from "../api/GamesClient";
+import { Stack } from "react-bootstrap";
+import Alert from "react-bootstrap/Alert";
 
 export default function GameBoard({ game, user }) {
   const leters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
@@ -9,7 +13,7 @@ export default function GameBoard({ game, user }) {
   const [matrix2, setMatrix2] = useState([]);
   const iAmPlayerOne = game.player1Id === user.id;
 
-  // console.log(game);
+  console.log(game);
   // console.log(user);
   useEffect(() => {
     let shipsCoord = game.shipsCoord ? game.shipsCoord : [];
@@ -58,8 +62,14 @@ export default function GameBoard({ game, user }) {
       y: selectedY,
     };
     console.log(req);
+    if (game.status === "ACTIVE") {
+      strike(JSON.stringify(req), game.id);
+    }
+  }
 
-    strike(JSON.stringify(req), game.id);
+  function handleSendConfigMap(e) {
+    e.preventDefault();
+    gameConfigDefault(game.id);
   }
 
   return (
@@ -69,7 +79,17 @@ export default function GameBoard({ game, user }) {
           <Col className={"m-2"}>
             <Row>
               <Col className={"my-2"}>
-                <h3>{user.email}</h3>
+                <Stack direction="horizontal">
+                  <h3>{user.email}</h3>
+                  <Button
+                    disabled={game.shipsCoord && game.shipsCoord.length}
+                    variant="outline-info"
+                    className="ms-auto"
+                    onClick={(e) => handleSendConfigMap(e)}
+                  >
+                    Send Config Map
+                  </Button>
+                </Stack>
               </Col>
             </Row>
             <Row>

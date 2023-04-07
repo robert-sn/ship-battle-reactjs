@@ -7,6 +7,8 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
+import Header from "../component/Header";
+import Stack from "react-bootstrap/Stack";
 
 export default function GamePage({ setGameId }) {
   const [game, setGame] = useState(null);
@@ -14,6 +16,7 @@ export default function GamePage({ setGameId }) {
   const [state, setState] = useState("");
   const navigate = useNavigate();
   const interval = useState(null);
+  console.log(game);
 
   useEffect(() => {
     setState("loading");
@@ -37,7 +40,7 @@ export default function GamePage({ setGameId }) {
     };
     loadData();
 
-    interval.current = setInterval(loadData, 2000);
+    interval.current = setInterval(loadData, 200000);
 
     return () => {
       clearInterval(interval.current);
@@ -50,70 +53,41 @@ export default function GamePage({ setGameId }) {
     setGameId(null);
     navigate("/");
   }
-  function handleSendConfigMap(e) {
-    e.preventDefault();
-    gameConfigDefault(game.id);
-  }
 
   return (
     <Container>
-      <Row>
-        <Col>
-          <h1>Game Page</h1>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <Button onClick={(e) => handleExit(e)}>Exit</Button>
-        </Col>
-      </Row>
-      <Row>
-        {game && (
+      {profile && (
+        <Row className={"mt-4"}>
           <Col>
-            <Row className={"border m-1"}>
-              <Col>
-                <span className={"mx-2"}>Player1:</span>
-                <span className={"mx-2"}>{game.player1?.id}</span>
-                <span className={"mx-2"}>{game.player1?.email}</span>
-              </Col>
-              <Col className={"text-right"}>
-                <Button onClick={(e) => handleSendConfigMap(e)}>
-                  Send Config Map
-                </Button>
-              </Col>
-            </Row>
-
-            <Row className={"border m-1"}>
-              <Col>
-                <span className={"mx-2"}>Player2:</span>
-                <span className={"mx-2"}>{game.player2?.id}</span>
-                <span className={"mx-2"}>{game.player2?.email}</span>
-              </Col>
-              <Col className={"text-right"}>
-                <Button onClick={(e) => handleSendConfigMap(e)}>
-                  Send Config Map
-                </Button>
-              </Col>
-            </Row>
+            {game && (
+              <Stack gap={2}>
+                <h1>Game Page</h1>
+                <div>
+                  <span className={"mx-2"}>Status:</span>
+                  <span className={"mx-2"}>{game?.status}</span>
+                </div>
+                <div>
+                  <span className={"mx-2"}>Next to move:</span>
+                  <span variant="outline-success">
+                    {game && game?.playerToMoveId === game?.player1Id
+                      ? game.player1?.email
+                      : game.player2?.email}
+                  </span>
+                </div>
+              </Stack>
+            )}
+          </Col>
+          <Col>
             <Row>
               <Col>
-                <span className={"mx-2"}>Status:</span>
-                <span className={"mx-2"}>{game.status}</span>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <span className={"mx-2"}>Next to move:</span>
-                <span>
-                  {game?.playerToMoveId === game?.player1Id
-                    ? game.player1.email
-                    : game.player2.email}
-                </span>
+                <Header profile={profile} action={(e) => handleExit(e)} />
               </Col>
             </Row>
           </Col>
-        )}
-      </Row>
+        </Row>
+      )}
+
+      <Row>{game && <Col></Col>}</Row>
       <Row>
         <Col>
           {game && profile && <GameBoard game={game} user={profile.user} />}

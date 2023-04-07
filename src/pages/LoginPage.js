@@ -7,7 +7,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 
-export default function RegisterPage({ setToken }) {
+export default function LoginPage({ setToken }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
