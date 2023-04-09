@@ -7,7 +7,6 @@ import { useState } from "react";
 
 function App() {
   const [token, setToken] = useState(sessionStorage.getItem("token"));
-  const [gameId, setGameId] = useState(sessionStorage.getItem("gameId"));
 
   return (
     <BrowserRouter>
@@ -17,14 +16,14 @@ function App() {
           path="/"
           element={
             token ? (
-              <MainPage setToken={setToken} setGameId={setGameId} />
+              <MainPage setToken={setToken} />
             ) : (
               <LoginPage setToken={setToken} />
             )
           }
         ></Route>
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/game" element={<GamePage setGameId={setGameId} />} />
+        <Route path="/game" element={<GamePage />} />
       </Routes>
     </BrowserRouter>
   );
