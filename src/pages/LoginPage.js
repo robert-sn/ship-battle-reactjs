@@ -54,7 +54,9 @@ export default function LoginPage({ setToken }) {
                   placeholder="Enter your password"
                   onChange={(e) => setPassword(e.target.value)}
                 />
-                <Button type="submit">Login</Button>
+                <Button className="m-2" type="submit">
+                  Login
+                </Button>
               </Form>
             </Col>
           </Row>

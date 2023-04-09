@@ -1,21 +1,21 @@
 import { profileUser } from "../api/ProfileClient";
 import { getAllGames, joinGame, createGame } from "../api/GamesClient";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
-import { useNavigate } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Header from "../component/Header";
 
-export default function MainPage({ setToken, setGameId }) {
+export default function MainPage({ setToken }) {
   const [profile, setProfile] = useState(null);
   const [games, setGames] = useState([]);
   const navigate = useNavigate();
   const interval = useRef(null);
-  console.log(games);
-  console.log(profile);
+  // console.log(games);
+  // console.log(profile);
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -32,7 +32,7 @@ export default function MainPage({ setToken, setGameId }) {
       }
     };
     loadData();
-    interval.current = setInterval(loadData, 50000);
+    interval.current = setInterval(loadData, 500);
 
     return () => {
       clearInterval(interval.current);
@@ -42,7 +42,7 @@ export default function MainPage({ setToken, setGameId }) {
   function handleJoinGame(e, gameId) {
     e.preventDefault();
     sessionStorage.setItem("gameId", gameId);
-    joinGame(gameId).then((e) => setGameId(gameId));
+    joinGame(gameId);
     navigate("/game");
   }
   function handleCreateGame(e) {
@@ -50,9 +50,7 @@ export default function MainPage({ setToken, setGameId }) {
 
     let resp = async () => {
       try {
-        let r = await createGame();
-        setGameId(r.id);
-        navigate("/game");
+        await createGame().then(() => navigate("/game"));
       } catch (error) {
         console.log(error);
       }

@@ -1,22 +1,21 @@
 import { useState, useEffect } from "react";
 import { profileUser } from "../api/ProfileClient";
-import { getGameById, gameConfigDefault } from "../api/GamesClient";
-import GameBoard from "../component/GameBoard";
+import { getGameById } from "../api/GamesClient";
 import { useNavigate } from "react-router-dom";
+import GameBoard from "../component/GameBoard";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
 import Header from "../component/Header";
 import Stack from "react-bootstrap/Stack";
 
-export default function GamePage({ setGameId }) {
+export default function GamePage() {
   const [game, setGame] = useState(null);
   const [profile, setProfile] = useState(null);
   const [state, setState] = useState("");
   const navigate = useNavigate();
   const interval = useState(null);
-  console.log(game);
+  // console.log(game);
 
   useEffect(() => {
     setState("loading");
@@ -40,17 +39,16 @@ export default function GamePage({ setGameId }) {
     };
     loadData();
 
-    interval.current = setInterval(loadData, 200000);
+    interval.current = setInterval(loadData, 2000);
 
     return () => {
       clearInterval(interval.current);
     };
-  }, [setGameId]);
+  }, [interval]);
 
   function handleExit(e) {
     e.preventDefault();
     sessionStorage.removeItem("gameId");
-    setGameId(null);
     navigate("/");
   }
 

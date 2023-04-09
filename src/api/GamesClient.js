@@ -1,4 +1,4 @@
-import { ships, shipsV2 } from "../model/Ships";
+import { shipsV2 } from "../model/Ships";
 
 const baseApi = "https://react-labs.softbinator.com/game";
 
@@ -51,11 +51,8 @@ export async function joinGame(gameId) {
     (resp) => resp.json()
   );
 
-  if (response.code !== 200) {
-    // gameConfig(gameId, JSON.stringify(shipsV2));
+  if (response.code) {
     response = await getGameById(gameId);
-  } else {
-    // gameConfig(gameId, JSON.stringify(shipsV2));
   }
   return await response;
 }
@@ -109,14 +106,11 @@ export async function createGame() {
     method: "POST",
   };
 
-  let response = await fetch(baseApi, request).then((resp) => {
-    if (response.code === 200) {
-      sessionStorage.setItem("gameId", response.json().id);
-    }
-    resp.json();
-  });
+  let response = await fetch(baseApi, request).then((resp) => resp.json());
   console.log(response);
-
+  if (!response.code) {
+    sessionStorage.setItem("gameId", response.id);
+  }
   return await response;
 }
 
